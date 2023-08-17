@@ -21,6 +21,7 @@ class AllRequiredRequest extends FormRequest
      */
     public function rules(): array
     {
+
         if(request()->has('_method')){
             session()->put('updateMeeting',1);
         }else{

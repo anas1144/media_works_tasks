@@ -13,6 +13,8 @@ class Meeting extends Model
         'subject',
         'start_time',
         'end_time',
+        'created_by',
+        'event_id',
         'meeting_link'
     ];
 }
