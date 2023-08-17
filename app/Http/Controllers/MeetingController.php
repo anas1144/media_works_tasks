@@ -49,9 +49,8 @@ class MeetingController extends Controller
                 'name' => Auth::user()->name,
             ]);
             $event->addAttendee([
-//                'email' => User::find($request->recipient_email,['name'])->name,
-                'email' => 'misterkamran93@gmail.com',
-                'name' => User::find($request->recipient_email, ['email'])->email,
+                'email' => User::find($request->recipient_email,['email'])->email,
+                'name' => User::find($request->recipient_email, ['name'])->name,
             ]);
             $event->addMeetLink();// optionally add a google meet link to the event
 
@@ -60,7 +59,7 @@ class MeetingController extends Controller
             $event->save();
 
             $request->request->add(['event_id'=>$event->id]);
-            
+
             $meeting = Meeting::create($request->only(app(Meeting::class)->getFillable()));
 
             Attendee::create([
@@ -74,6 +73,7 @@ class MeetingController extends Controller
             session()->forget('addMeeting');
             return redirect()->back()->with('success', 'Meeting Created Successfully.');
         } catch (\Exception $e) {
+            dd($e);
             DB::rollBack();
             session()->forget('addMeeting');
             return redirect()->back()->with('success',json_decode($e->getMessage())->error->message);
