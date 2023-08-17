@@ -58,7 +58,9 @@ class MeetingController extends Controller
             $googleCalendar = GoogleCalendarFactory::createForCalendarId('e95d7837dc715960d86d0a3a8193ad7ed2f2db4de55cf5bab8e5ff5550dbab80@group.calendar.google.com');
 
             $event->save();
-            dd($request->all(), $event);
+
+            $request->request->add(['event_id'=>$event->id]);
+            
             $meeting = Meeting::create($request->only(app(Meeting::class)->getFillable()));
 
             Attendee::create([
@@ -72,10 +74,9 @@ class MeetingController extends Controller
             session()->forget('addMeeting');
             return redirect()->back()->with('success', 'Meeting Created Successfully.');
         } catch (\Exception $e) {
-            dd(json_decode($e->getMessage())->error->message);
             DB::rollBack();
             session()->forget('addMeeting');
-//            return redirect()->back()->with('success',json_decode($e->getMessage())->message);
+            return redirect()->back()->with('success',json_decode($e->getMessage())->error->message);
         }
 
     }
